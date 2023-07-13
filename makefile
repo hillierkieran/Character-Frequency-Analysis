@@ -1,17 +1,19 @@
 COMPILER = gcc
 CFLAGS = -Wall -pedantic
 
-EXES = ring
+EXES = charfreq
 
 all: ${EXES}
 
 
-ring:  ring.c 
-	${COMPILER} ${CFLAGS} ring.c -o ring
-chain:  chain.c 
+charfreq:  charfreq.c 
+	${COMPILER} ${CFLAGS} charfreq.c -o charfreq]
 
 %.o: %.c %.h  makefile
 	${COMPILER} ${CFLAGS} $< -c 
 
 clean: 
 	rm -f *~ *.o ${EXES}
+
+run:
+	${EXES}
