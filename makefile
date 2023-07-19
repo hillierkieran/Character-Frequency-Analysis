@@ -1,13 +1,13 @@
 COMPILER = gcc
 CFLAGS = -Wall -pedantic
 
-EXES = charfreq
+EXES = new
 
 all: ${EXES}
 
 
-charfreq:  charfreq.c 
-	${COMPILER} ${CFLAGS} charfreq.c -o charfreq]
+new:  new.c 
+	${COMPILER} ${CFLAGS} new.c -o new
 
 %.o: %.c %.h  makefile
 	${COMPILER} ${CFLAGS} $< -c 
@@ -16,4 +16,4 @@ clean:
 	rm -f *~ *.o ${EXES}
 
 run:
-	${EXES}
+	./${EXES} 10 text_files

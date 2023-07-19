@@ -57,6 +57,11 @@
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "files.associations": {
-    "stdlib.h": "c"
-  }
+    "stdlib.h": "c",
+    "stdio.h": "c",
+    "dirent.h": "c"
+  },
+  "C_Cpp.default.compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe",
+  "C_Cpp.vcFormat.newLine.beforeElse": false,
+  "C_Cpp.vcFormat.newLine.beforeOpenBrace.function": "newLine"
 }

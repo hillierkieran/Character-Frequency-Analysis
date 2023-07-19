@@ -5,7 +5,8 @@
 #include <errno.h>
 #include <ctype.h>
 
-#include "lib.h"
+#include "ring.h"
+#include "counter.h"
 
 /*  Retrieve list of files in target directory (text files assumed) and 
     store this list of the file names in an array.                            */
