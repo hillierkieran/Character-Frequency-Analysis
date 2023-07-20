@@ -1,4 +1,6 @@
+/* make_ring.h */
 #include <unistd.h> /* for fork     */
+
 int make_trivial_ring()
 {
     int fd[2];
@@ -11,6 +13,7 @@ int make_trivial_ring()
         return (-3);
     return (0);
 }
+
 int add_new_node(int *pid)
 {
     int fd[2];

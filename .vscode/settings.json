@@ -59,7 +59,10 @@
   "files.associations": {
     "stdlib.h": "c",
     "stdio.h": "c",
-    "dirent.h": "c"
+    "dirent.h": "c",
+    "ring.h": "c",
+    "cstdlib": "c",
+    "type_traits": "c"
   },
   "C_Cpp.default.compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe",
   "C_Cpp.vcFormat.newLine.beforeElse": false,

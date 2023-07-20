@@ -1,4 +1,3 @@
-
 #include <stdio.h>  /* for fprintf  */
 #include <stdlib.h> /* for exit     */
 #include <unistd.h> /* for fork     */
@@ -83,8 +82,8 @@ int send_numbers(char buff[], long num1, long num2)
 void report_sum(int i, long first, long old_second, long second, long third)
 {
     fprintf(stderr,
-            "\nProcess %d with PID %d and parent PID %d recieved %ld %ld and sent %ld %ld.\n",
-            i, (int)getpid(), (int)getppid(), first, old_second, second, third);
+            "Process %d, recieved %ld %ld and sent %ld %ld\n",
+            i, first, old_second, second, third);
 }
 int main(int argc, char *argv[])
 {
@@ -97,7 +96,6 @@ int main(int argc, char *argv[])
     long third;          /* sum of first and second                    */
     if (parse_args(argc, argv, &nprocs) < 0)
         exit(EXIT_FAILURE);
-    DIR 
     if (make_trivial_ring() < 0) {
         perror("Could not make trivial ring");
         exit(EXIT_FAILURE);
@@ -129,7 +127,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            fprintf(stderr, "\n\nfibonacci(%d) = %ld\n\n", nprocs, second);
+            fprintf(stderr, "fibonacci(%d) = %ld\n", nprocs, second);
         }
         exit(EXIT_SUCCESS);
     }
