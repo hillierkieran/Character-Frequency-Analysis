@@ -5,35 +5,14 @@
 #include <stdlib.h>     /* for exit()           */
 #include <string.h>     /* for strcmp()         */
 #include <sys/wait.h>   /* for wait()           */
-//#include "comms.h"      /* for communication    */
+#include "arg_parser.h"
 #include "make_ring.h"  /* for ring building    */
 #include "get_files.h"  /* for getting files    */
 
 #define BUFF_SIZE 256
 #define ALPHABET_SIZE 26
-#define BARLENGTH 50
+#define BARLENGTH 65
 #define DELIMITER " "
-
-int parse_args(int argc, char* argv[], int* n_procs, char** dir_name)
-{
-    if (argc != 3) {
-        /* Invalid number of arguments */
-        fprintf(stderr, "ERROR: Incorrect number of arguments.\n");
-        fprintf(stderr, "Usage: %s n_procs dirname\n", argv[0]);
-        return -1;
-    }
-    
-    *n_procs = atoi(argv[1]);
-    if (*n_procs <= 0) {
-        /* Invalid number of processes */
-        fprintf(stderr, "ERROR: Invalid number of processes. Should be greater than 0.\n");
-        return -1;
-    }
-
-    /* Correct input */
-    *dir_name = argv[2];
-    return 0;
-}
 
 int* divide_tasks(int i, int n_total, int n_procs, int* my_n_tasks)
 {
@@ -42,7 +21,8 @@ int* divide_tasks(int i, int n_total, int n_procs, int* my_n_tasks)
     int remainder = n_total % n_procs;
 
     *my_n_tasks = tasks_per_proc + ((i - 1) < remainder ? 1 : 0);
-    int first = (i - 1) * tasks_per_proc + ((i - 1) < remainder ? (i - 1) : remainder);
+    int first = ((i - 1) * tasks_per_proc 
+                + ((i - 1) < remainder ? (i - 1) : remainder));
 
     // Allocate memory for the list of task IDs
     int* task_ids = (int*)malloc(*my_n_tasks * sizeof(int));
@@ -97,8 +77,8 @@ long count_freq(char* file_name, long* char_freq, const char* dir_name)
 }
 
 char* array_to_string(long arr[], size_t length) {
-    // calculate the length of the string
-    int string_len = length * (sizeof(long) * 8 + 1);  // space for each digit and a space
+    /*  calculate the length of string incl. space for each digit and a space */
+    int string_len = length * (sizeof(long) * 8 + 1); 
     char* str = malloc(string_len);  // allocate memory for the string
     if (!str) {
         fprintf(stderr, "ERROR: Failed to allocate memory for string.\n");
@@ -118,29 +98,29 @@ char* array_to_string(long arr[], size_t length) {
     return str;
 }
 
-int send_data(char* buff, long* char_freq)
+int send_data(char* buff, long arr[])
 {
     int bytes, len;
-    sprintf(buff, "%s", array_to_string(char_freq, ALPHABET_SIZE));
+    sprintf(buff, "%s", array_to_string(arr, ALPHABET_SIZE));
     len = strlen(buff) + 1;
     if ((bytes = write(STDOUT_FILENO, buff, len)) != len) {
         fprintf(stderr,
                 "ERROR: Failed to write %d bytes, only sent %d bytes\n",
                 len, bytes);
         return -1;
-    } else {
-        return bytes;
     }
+    return bytes;
 }
 
-void receive_data(int i, char* buff, long* received_freq)
+void receive_data(char* buff, long arr[])
 {
     ssize_t read_result = read(STDIN_FILENO, buff, BUFF_SIZE);
     if(read_result < 0){
-        fprintf(stderr, "ERROR: Process %d failed to read pipe data.\n", i);
+        fprintf(stderr, "ERROR: Failed to read pipe data.\n");
         exit(EXIT_FAILURE);
     } else if (read_result == 0) {
-        fprintf(stderr, "ERROR: Process %d reached end of pipe without reading any data.\n", i);
+        fprintf(stderr, 
+                "ERROR: Reached end of pipe without reading any data.\n");
         exit(EXIT_FAILURE);
     }
 
@@ -148,32 +128,35 @@ void receive_data(int i, char* buff, long* received_freq)
 
     for(int i = 0; i < ALPHABET_SIZE; i++){
         if (!token) {
-            fprintf(stderr, "ERROR: Process %d received incomplete data.\n", i);
+            fprintf(stderr, "ERROR: Received incomplete data.\n");
             exit(EXIT_FAILURE);
         }
 
-        received_freq[i] += atol(token);
+        arr[i] += atol(token);
 
         token = strtok(NULL, DELIMITER);
     }
     
     if (token != NULL) {
-        fprintf(stderr, "ERROR: Process %d received too much data.\n", i);
+        fprintf(stderr, "ERROR: Received too much data.\n");
         exit(EXIT_FAILURE);
     }
 }
 
-void printBarChart(int i, char c, long count, long max_count) {
+void print_bar_chart(char c, long count, long max_count) 
+{
     int bar_length = (int) round( (double) count / max_count * BARLENGTH );
-    fprintf(stderr, "  Process %d got char %c: %7ld | ", i, c, count);
+    fprintf(stderr, " %c: %7ld | ", c, count);
     for (int i = 0; i < bar_length; i++) {
         fprintf(stderr, "*");
     }
     fprintf(stderr, "\n");
 }
 
-void print_result(int i, long char_freq[]) 
+void print_result(int n_procs, long char_freq[]) 
 {
+    fprintf(stderr, "\nProcessing complete on the ring with %d processes\n",
+            n_procs);
     // Find the maximum count to scale the bar chart
     long max_count = 0;
     for (int j = 0; j < ALPHABET_SIZE; j++) {
@@ -181,11 +164,11 @@ void print_result(int i, long char_freq[])
             max_count = char_freq[j];
         }
     }
-
     // Print the bar chart for each character's frequency
     for (int c = 0; c < ALPHABET_SIZE; c++) {
-        printBarChart(i, 'a' + c, char_freq[c], max_count);
+        print_bar_chart('a' + c, char_freq[c], max_count);
     }
+    fprintf(stderr, "\n");
 }
 
 int main(int argc, char *argv[])
@@ -209,7 +192,8 @@ int main(int argc, char *argv[])
     /*  get number of files in target directory */
     int n_files = get_n_files(dir_name);
     if (!n_files) {
-        fprintf(stderr, "ERROR: Failed to count the number of files in the given directory!\n");
+        fprintf(stderr, 
+                "ERROR: Failed to count files in the given directory!\n");
         exit(EXIT_FAILURE);
     }
     /*  get names of files in target directory */
@@ -241,8 +225,7 @@ int main(int argc, char *argv[])
         send_data(buff, char_freq);
     }
 
-    /* all processes */
-    //do_work(buff, i, n_files, n_procs, dir_name, files, char_freq);
+    /*  all processes */
     /*  get this process' assigned tasks */
     int my_n_tasks;
     int* task_ids = divide_tasks(i, n_files, n_procs, &my_n_tasks);
@@ -256,7 +239,7 @@ int main(int argc, char *argv[])
     free(task_ids);
 
 
-    receive_data(i, buff, char_freq);
+    receive_data(buff, char_freq);
 
     if (i > 1) {
         /*  ring processes */
@@ -264,8 +247,9 @@ int main(int argc, char *argv[])
     } else {
         /*  mother process */
         /*  report total frequencies to terminal */
-        fprintf(stderr, "\nProcessing complete on the ring with %d processes\n\n", n_procs);
-        print_result(i, char_freq);
+        fprintf(stderr, "\nProcessing complete on the ring with %d processes\n",
+                n_procs);
+        print_result(n_procs, char_freq);
         fprintf(stderr, "\n");
     }
 
@@ -276,7 +260,5 @@ int main(int argc, char *argv[])
         }
     }
     
-    /*  free this process' task memory after use */
-    free(files);
     exit(EXIT_SUCCESS);
 }

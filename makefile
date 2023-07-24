@@ -1,18 +1,18 @@
-COMPILER = gcc
+CC = gcc
 CFLAGS = -Wall -pedantic
+DEPS = arg_parser.h get_files.h make_ring.h
+OBJ = char_count.o arg_parser.o get_files.o make_ring.o
 
-EXES = char_count
+%.o: %.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
 
-all: ${EXES}
+char_count: $(OBJ)
+	$(CC) -o $@ $^ $(CFLAGS) -lm
 
-char_count:  char_count.c 
-	${COMPILER} ${CFLAGS} char_count.c -o char_count -lm
-
-%.o: %.c %.h  makefile
-	${COMPILER} ${CFLAGS} $< -c 
+.PHONY: clean
 
 clean: 
-	rm -f *~ *.o ${EXES}
+	rm -f *~ *.o $(OBJ)
 
 run:
-	./${EXES} 5 text_files
+	./char_count 5 text_files

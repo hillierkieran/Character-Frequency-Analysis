@@ -64,7 +64,8 @@
     "cstdlib": "c",
     "type_traits": "c",
     "make_ring.h": "c",
-    "string.h": "c"
+    "string.h": "c",
+    "arg_parser.h": "c"
   },
   "C_Cpp.default.compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe",
   "C_Cpp.vcFormat.newLine.beforeElse": false,
