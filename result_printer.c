@@ -32,7 +32,7 @@
 void print_bar_chart(char c, long count, long max_count) 
 {
     int bar_length = (int) round( (double) count / max_count * BARLENGTH );
-    fprintf(stderr, " %c: %7ld | ", c, count);
+    fprintf(stderr, "%c: %7ld | ", c, count);
     for (int i = 0; i < bar_length; i++) {
         fprintf(stderr, "*");
     }

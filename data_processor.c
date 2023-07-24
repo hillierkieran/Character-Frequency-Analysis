@@ -116,7 +116,9 @@ char* array_to_string(long arr[], size_t length) {
 int send_data(char* buffer, long arr[])
 {
     int bytes, len;
-    sprintf(buffer, "%s", array_to_string(arr, ALPHABET_SIZE));
+    char* arr_as_string = array_to_string(arr, ALPHABET_SIZE);
+    sprintf(buffer, "%s", arr_as_string);
+    free(arr_as_string);
     len = strlen(buffer) + 1;
     if ((bytes = write(STDOUT_FILENO, buffer, len)) != len) {
         fprintf(stderr,
