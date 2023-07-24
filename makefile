@@ -1,16 +1,12 @@
 COMPILER = gcc
 CFLAGS = -Wall -pedantic
 
-EXES = char_count fibonacci experiment
+EXES = char_count
 
 all: ${EXES}
 
 char_count:  char_count.c 
-	${COMPILER} ${CFLAGS} char_count.c -o char_count
-fibonacci:  fibonacci.c 
-	${COMPILER} ${CFLAGS} fibonacci.c -o fibonacci
-experiment:  experiment.c 
-	${COMPILER} ${CFLAGS} experiment.c -o experiment
+	${COMPILER} ${CFLAGS} char_count.c -o char_count -lm
 
 %.o: %.c %.h  makefile
 	${COMPILER} ${CFLAGS} $< -c 

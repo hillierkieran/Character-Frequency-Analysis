@@ -2,9 +2,9 @@
 #include <dirent.h> /* for directories      */
 #include <stdio.h>  /* for fprintf          */
 
-size_t get_n_files(char *dir_name) 
+int get_n_files(char *dir_name) 
 {
-    size_t n_files = 0;
+    int n_files = 0;
     DIR *dir_stream;
     struct dirent *entry;
     if ((dir_stream = opendir(dir_name)) == NULL ) {
@@ -21,7 +21,7 @@ size_t get_n_files(char *dir_name)
     return n_files;
 }
 
-char** get_files(char *dir_name, size_t n_files)
+char** get_files(char *dir_name, int n_files)
 {
     int i = 0; 
     char **files = malloc(sizeof (char *) * n_files);

@@ -62,7 +62,9 @@
     "dirent.h": "c",
     "ring.h": "c",
     "cstdlib": "c",
-    "type_traits": "c"
+    "type_traits": "c",
+    "make_ring.h": "c",
+    "string.h": "c"
   },
   "C_Cpp.default.compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe",
   "C_Cpp.vcFormat.newLine.beforeElse": false,
