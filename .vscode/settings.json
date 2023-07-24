@@ -67,7 +67,11 @@
     "string.h": "c",
     "arg_parser.h": "c",
     "data_processor.h": "c",
-    "task_manager.h": "c"
+    "task_manager.h": "c",
+    "ring_builder.h": "c",
+    "ctype.h": "c",
+    "file_handler.h": "c",
+    "result_printer.h": "c"
   },
   "C_Cpp.default.compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe",
   "C_Cpp.vcFormat.newLine.beforeElse": false,

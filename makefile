@@ -1,16 +1,16 @@
 CC = gcc
 CFLAGS = -Wall -pedantic
 DEPS = 	arg_parser.h \
-		get_files.h \
-		make_ring.h \
+		file_handler.h \
+		ring_builder.h \
 		task_manager.h \
 		data_processor.h \
 		result_printer.h
 
 OBJ = 	char_count.o \
 		arg_parser.o \
-		get_files.o \
-		make_ring.o \
+		file_handler.o \
+		ring_builder.o \
 		task_manager.o \
 		data_processor.o \
 		result_printer.o
@@ -24,7 +24,7 @@ char_count: $(OBJ)
 .PHONY: clean
 
 clean: 
-	rm -f *~ *.o $(OBJ)
+	rm -f *~ *.o $(OBJ) char_count
 
 run:
 	./char_count 5 text_files
