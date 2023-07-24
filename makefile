@@ -1,7 +1,19 @@
 CC = gcc
 CFLAGS = -Wall -pedantic
-DEPS = arg_parser.h get_files.h make_ring.h
-OBJ = char_count.o arg_parser.o get_files.o make_ring.o
+DEPS = 	arg_parser.h \
+		get_files.h \
+		make_ring.h \
+		task_manager.h \
+		data_processor.h \
+		result_printer.h
+
+OBJ = 	char_count.o \
+		arg_parser.o \
+		get_files.o \
+		make_ring.o \
+		task_manager.o \
+		data_processor.o \
+		result_printer.o
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
